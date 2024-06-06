@@ -455,8 +455,11 @@ export async function tryPost(
 
   const provider: string = providerOption.provider ?? '';
 
+  console.log('in trypost,  providerOption:: ', providerOption);
+  console.log('Providers::', Providers);
   // Mapping providers to corresponding URLs
   const apiConfig: ProviderAPIConfig = Providers[provider].api;
+  console.log('apiConfig', apiConfig);
   // Attach the body of the request
   const transformedRequestBody = transformToProviderRequest(
     provider,
@@ -482,7 +485,7 @@ export async function tryPost(
     gatewayRequestBody: params,
   });
   const url = `${baseUrl}${endpoint}`;
-
+  console.log(url);
   const headers = await apiConfig.headers({
     providerOptions: providerOption,
     fn,
@@ -500,7 +503,7 @@ export async function tryPost(
   );
 
   fetchOptions.body = JSON.stringify(transformedRequestBody);
-
+  console.log(fetchOptions.body);
   let response: Response;
   let retryCount: number | undefined;
 
@@ -825,6 +828,7 @@ export async function tryTargetsRecursively(
   }
 
   if (currentTarget.customHost) {
+    console.log('currentTarget.customHost:: ', currentTarget.customHost);
     currentInheritedConfig.customHost = currentTarget.customHost;
   } else if (inheritedConfig.customHost) {
     currentInheritedConfig.customHost = inheritedConfig.customHost;
@@ -856,6 +860,7 @@ export async function tryTargetsRecursively(
   switch (strategyMode) {
     case 'fallback':
       for (let [index, target] of currentTarget.targets.entries()) {
+        console.log('target', target);
         response = await tryTargetsRecursively(
           c,
           target,
@@ -921,6 +926,7 @@ export async function tryTargetsRecursively(
       break;
 
     default:
+      console.log('now try post');
       try {
         response = await tryPost(
           c,

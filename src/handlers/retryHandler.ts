@@ -63,6 +63,7 @@ export const retryRequest = async (
   let lastError: any | undefined;
   let lastResponse: Response | undefined;
   let lastAttempt: number | undefined;
+  console.log('url:: ', url);
   try {
     await retry(
       async (bail: any, attempt: number) => {
@@ -70,6 +71,7 @@ export const retryRequest = async (
           const response: Response = timeout
             ? await fetchWithTimeout(url, options, timeout)
             : await fetch(url, options);
+          console.log('response of fetch', response);
           if (statusCodesToRetry.includes(response.status)) {
             const errorObj: any = new Error(await response.text());
             errorObj.status = response.status;

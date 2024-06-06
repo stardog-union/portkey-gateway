@@ -149,5 +149,6 @@ export const requestValidator = (c: Context, next: any) => {
       );
     }
   }
+  console.log('request validator ends');
   return next();
 };
