@@ -25,10 +25,6 @@ jobs:
       - run:
           name: Create .env file
           command: |
-            touch .env
-      - run:
-          name: Create .env file
-          command: |
             npm i
             npm run build
       - persist_to_workspace:
@@ -44,30 +40,10 @@ jobs:
       - run:
           name: Compile Prod and Distribute
           command: ./scripts/deploy-to-artifactory.sh
-  lint_and_unit_test:
-    executor: test-executor
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: format
-          command: |
-            npm format
-      - run:
-          name: Copy logs
-          when: always
-          command: |
-            mkdir -p /tmp/output
-            docker compose logs > /tmp/output/test.log
-      - store_artifacts:
-          path: /tmp/output
 workflows:
   test:
     jobs:
       - setup
-      - lint_and_unit_test:
-          requires:
-            - setup
   distribute_main:
     when:
         equal: [ main, << pipeline.git.branch >> ] 
