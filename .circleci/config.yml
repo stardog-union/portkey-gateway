@@ -1,0 +1,94 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.0.0
+
+references:
+  working_directory: &working_directory ~/app
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:16.20
+    working_directory: *working_directory
+  test-executor:
+    machine:
+      docker_layer_caching: true
+      image: ubuntu-2004:2023.04.2
+    working_directory: *working_directory
+
+jobs:
+  setup:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Create .env file
+          command: |
+            touch .env
+      - run:
+          name: Create .env file
+          command: |
+            npm i
+            npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./
+  build_and_distribute:
+    executor: test-executor
+    description: Build and Distribute 
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Compile Prod and Distribute
+          command: ./scripts/deploy-to-artifactory.sh
+  lint_and_unit_test:
+    executor: test-executor
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: format
+          command: |
+            npm format
+      - run:
+          name: Copy logs
+          when: always
+          command: |
+            mkdir -p /tmp/output
+            docker compose logs > /tmp/output/test.log
+      - store_artifacts:
+          path: /tmp/output
+workflows:
+  test:
+    jobs:
+      - setup
+      - lint_and_unit_test:
+          requires:
+            - setup
+  distribute_main:
+    when:
+        equal: [ main, << pipeline.git.branch >> ] 
+    jobs:
+      - setup
+      - build_and_distribute:
+          requires:
+            - setup
+  distribute_tagged:
+    when:
+      matches: { pattern: ".+" , value:  << pipeline.git.tag >> }
+    jobs:
+      - setup:
+          filters:
+            tags:
+              only:
+                - /.*/
+      - build_and_distribute:
+          requires:
+            - setup
+          filters:
+            tags:
+              only:
+                - /.*/
