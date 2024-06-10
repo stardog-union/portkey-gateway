@@ -14,7 +14,7 @@ executors:
   test-executor:
     machine:
       docker_layer_caching: true
-      image: ubuntu-2004:2023.04.2
+      image: ubuntu-2204:2024.01.1
     working_directory: *working_directory
 
 jobs:
@@ -41,17 +41,17 @@ jobs:
     executor: test-executor
     description: Build and Distribute 
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
       - attach_workspace:
           at: .
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Compile Prod and Distribute
           command: ./scripts/deploy-to-artifactory.sh
 workflows:
-  test:
-    jobs:
-      - setup
+  # test:
+  #   jobs:
+  #     - setup
   distribute_main:
     # when:
     #     equal: [ main, << pipeline.git.branch >> ] 
