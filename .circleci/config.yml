@@ -23,7 +23,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Create .env file
+          name: build npm project
           command: |
             npm i
             npm run build
@@ -31,6 +31,10 @@ jobs:
           root: .
           paths:
             - ./
+      - run:
+          name: Create Docker image
+          command: |
+            docker compose -f docker-compose-stardog.yaml build
   build_and_distribute:
     executor: test-executor
     description: Build and Distribute 
@@ -45,8 +49,8 @@ workflows:
     jobs:
       - setup
   distribute_main:
-    when:
-        equal: [ main, << pipeline.git.branch >> ] 
+    # when:
+    #     equal: [ main, << pipeline.git.branch >> ] 
     jobs:
       - setup
       - build_and_distribute:
