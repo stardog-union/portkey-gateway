@@ -22,6 +22,8 @@ jobs:
     executor: node-executor
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: build npm project
           command: |
@@ -39,6 +41,8 @@ jobs:
     executor: test-executor
     description: Build and Distribute 
     steps:
+    - setup_remote_docker:
+          docker_layer_caching: true
       - attach_workspace:
           at: .
       - run:
