@@ -11,7 +11,7 @@ executors:
   test-executor:
     machine:
       docker_layer_caching: true
-      image: ubuntu-2204:2024.01.1
+      image: ubuntu-2204:2024.04.4
     working_directory: *working_directory
 
 jobs:
