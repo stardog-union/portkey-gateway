@@ -22,8 +22,6 @@ jobs:
     executor: node-executor
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: build npm project
           command: |
@@ -43,8 +41,6 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: Compile Prod and Distribute
           command: ./scripts/deploy-to-artifactory.sh
