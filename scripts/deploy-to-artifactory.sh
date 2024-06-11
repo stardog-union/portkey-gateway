@@ -32,7 +32,7 @@ echo "Logging into docker registry"
 docker login ${ARTIFACTORY_REGISTRY_INTERNAL} -u ${ARTIFACTORY_USERNAME} -p ${ARTIFACTORY_PASSWORD}
 
 echo "Building images"
-docker compose -f ../docker-compose-stardog.yaml build
+docker compose -f docker-compose-stardog.yaml build
 
 echo "Tagging and pushing the cloud-login image with tag: ${TAG}"
 docker tag voicebox-portkey-triton ${ARTIFACTORY_REGISTRY_INTERNAL}/cloud/voicebox-portkey-triton:${TAG}
