@@ -11,7 +11,6 @@ const TritonAPIConfig: ProviderAPIConfig = {
     let mappedFn = fn;
     switch (mappedFn) {
       case 'complete': {
-        // console.log("inside complete")
         return `/generate`;
       }
       default:
