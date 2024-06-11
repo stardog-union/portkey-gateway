@@ -34,6 +34,6 @@ docker login ${ARTIFACTORY_REGISTRY_INTERNAL} -u ${ARTIFACTORY_USERNAME} -p ${AR
 echo "Building images"
 docker compose -f docker-compose-stardog.yaml build
 
-echo "Tagging and pushing the cloud-login image with tag: ${TAG}"
+echo "Tagging and pushing the portkey-triton image with tag: ${TAG}"
 docker tag voicebox-portkey-triton ${ARTIFACTORY_REGISTRY_INTERNAL}/cloud/voicebox-portkey-triton:${TAG}
 docker push ${ARTIFACTORY_REGISTRY_INTERNAL}/cloud/voicebox-portkey-triton:${TAG}

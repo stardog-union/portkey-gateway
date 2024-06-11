@@ -456,7 +456,6 @@ export async function tryPost(
   const provider: string = providerOption.provider ?? '';
 
   console.log('in trypost,  providerOption:: ', providerOption);
-  console.log('Providers::', Providers);
   // Mapping providers to corresponding URLs
   const apiConfig: ProviderAPIConfig = Providers[provider].api;
   console.log('apiConfig', apiConfig);

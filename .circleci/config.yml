@@ -41,33 +41,17 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Compile Prod and Distribute
+          name: Build docker image and publish to artifactory
           command: ./scripts/deploy-to-artifactory.sh
 workflows:
-  # test:
-  #   jobs:
-  #     - setup
+  test:
+    jobs:
+      - setup
   distribute_main:
-    # when:
-    #     equal: [ main, << pipeline.git.branch >> ] 
+    when:
+        equal: [ main, << pipeline.git.branch >> ] 
     jobs:
       - setup
       - build_and_distribute:
           requires:
             - setup
-  distribute_tagged:
-    when:
-      matches: { pattern: ".+" , value:  << pipeline.git.tag >> }
-    jobs:
-      - setup:
-          filters:
-            tags:
-              only:
-                - /.*/
-      - build_and_distribute:
-          requires:
-            - setup
-          filters:
-            tags:
-              only:
-                - /.*/
