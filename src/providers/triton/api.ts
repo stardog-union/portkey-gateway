@@ -5,20 +5,16 @@ const TritonAPIConfig: ProviderAPIConfig = {
     return {};
   },
   getBaseURL: ({ providerOptions }) => {
-    console.log('getBaseURL', providerOptions.customHost);
     return providerOptions.customHost ?? '';
   },
   getEndpoint: ({ fn, providerOptions }) => {
     let mappedFn = fn;
-    const { urlToFetch } = providerOptions;
-    console.log(`mappedFn: ${mappedFn}`);
     switch (mappedFn) {
       case 'complete': {
-        console.log('insode complete');
+        // console.log("inside complete")
         return `/generate`;
       }
       default:
-        console.log('insode blank');
         return '';
     }
   },

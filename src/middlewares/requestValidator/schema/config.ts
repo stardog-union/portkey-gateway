@@ -106,7 +106,6 @@ export const configSchema: any = z
   .refine(
     (value) => {
       const customHost = value.custom_host;
-      console.log('customHost', customHost);
       if (customHost && customHost.indexOf('api.portkey') > -1) {
         return false;
       }
