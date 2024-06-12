@@ -1,0 +1,57 @@
+version: 2.1
+
+references:
+  working_directory: &working_directory ~/app
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:16.20
+    working_directory: *working_directory
+  test-executor:
+    machine:
+      docker_layer_caching: true
+      image: ubuntu-2204:2024.04.4
+    working_directory: *working_directory
+
+jobs:
+  setup:
+    executor: node-executor
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: build npm project
+          command: |
+            npm i
+            npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./
+      - run:
+          name: Create Docker image
+          command: |
+            docker compose -f docker-compose-stardog.yaml build
+  build_and_distribute:
+    executor: test-executor
+    description: Build and Distribute 
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build docker image and publish to artifactory
+          command: ./scripts/deploy-to-artifactory.sh
+workflows:
+  test:
+    jobs:
+      - setup
+  distribute_main:
+    when:
+        equal: [ main, << pipeline.git.branch >> ] 
+    jobs:
+      - setup
+      - build_and_distribute:
+          requires:
+            - setup

@@ -482,7 +482,6 @@ export async function tryPost(
     gatewayRequestBody: params,
   });
   const url = `${baseUrl}${endpoint}`;
-
   const headers = await apiConfig.headers({
     providerOptions: providerOption,
     fn,
@@ -500,7 +499,6 @@ export async function tryPost(
   );
 
   fetchOptions.body = JSON.stringify(transformedRequestBody);
-
   let response: Response;
   let retryCount: number | undefined;
 

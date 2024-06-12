@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { OLLAMA, VALID_PROVIDERS, GOOGLE_VERTEX_AI } from '../../../globals';
+import {
+  OLLAMA,
+  VALID_PROVIDERS,
+  GOOGLE_VERTEX_AI,
+  TRITON,
+} from '../../../globals';
 
 export const configSchema: any = z
   .object({
@@ -73,6 +78,7 @@ export const configSchema: any = z
       const hasModeTargets =
         value.strategy !== undefined && value.targets !== undefined;
       const isOllamaProvider = value.provider === OLLAMA;
+      const isTritonProvider = value.provider === TRITON;
       const isVertexAIProvider =
         value.provider === GOOGLE_VERTEX_AI &&
         value.vertex_project_id &&
@@ -87,6 +93,7 @@ export const configSchema: any = z
         value.retry ||
         value.request_timeout ||
         isOllamaProvider ||
+        isTritonProvider ||
         hasAWSDetails ||
         isVertexAIProvider
       );

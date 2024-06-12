@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  voicebox-portkey-triton:
+    image: voicebox-portkey-triton
+    container_name: vbx-portkey
+    build:
+      context: .
+      dockerfile: Dockerfile
+      ssh:
+        - default
+    ports:
+      - 8787:8787
+    
+
